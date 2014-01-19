@@ -24,7 +24,8 @@ lazy val akkaWebsocketBridge = project.in(file("akka-websocket-bridge"))
   .settings(commonSettings: _*)
 
 lazy val examples = project.settings(commonSettings: _*)
-  .aggregate(webworkersExample)
+  .aggregate(webworkersExample, faultToleranceExample,
+      chatExample, chatExampleScalaJS)
 
 lazy val webworkersExample = project.in(file("examples/webworkers"))
   .settings(commonSettings: _*)
@@ -37,7 +38,6 @@ lazy val faultToleranceExample = project.in(file("examples/faulttolerance"))
 lazy val chatExample = project.in(file("examples/chat-full-stack"))
   .settings(commonSettings: _*)
   .dependsOn(akkaWebsocketBridge)
-  .aggregate(chatExampleScalaJS)
 
 lazy val chatExampleScalaJS = project.in(file("examples/chat-full-stack/scalajs"))
   .settings(commonSettings: _*)

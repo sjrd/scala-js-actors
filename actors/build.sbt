@@ -2,7 +2,7 @@ import ScalaJSKeys._
 
 scalaJSSettings
 
-scalaVersion := "2.11.0-M7"
+scalaVersion := "2.10.3"
 
 name := "Scala.js actors"
 

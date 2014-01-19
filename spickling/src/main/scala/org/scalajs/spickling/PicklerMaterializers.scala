@@ -2,10 +2,10 @@ package org.scalajs.spickling
 
 import scala.language.experimental.macros
 
-import scala.reflect.macros.BlackboxContext
+import scala.reflect.macros.Context
 
 object PicklerMaterializersImpl {
-  def materializePickler[T: c.WeakTypeTag](c: BlackboxContext): c.Tree = {
+  def materializePickler[T: c.WeakTypeTag](c: Context): c.Expr[Pickler[T]] = {
     import c.universe._
 
     val tpe = weakTypeOf[T]
@@ -14,7 +14,7 @@ object PicklerMaterializersImpl {
     if (!sym.isCaseClass) {
       c.error(c.enclosingPosition,
           "Cannot materialize pickler for non-case class")
-      return q"null"
+      return c.Expr[Pickler[T]](q"null")
     }
 
     val accessors = (tpe.declarations collect {
@@ -36,7 +36,7 @@ object PicklerMaterializersImpl {
       pickle
     """
 
-    q"""
+    val result = q"""
       implicit object GenPickler extends org.scalajs.spickling.Pickler[$tpe] {
         import org.scalajs.spickling._
         override def pickle(value: $tpe)(
@@ -44,9 +44,11 @@ object PicklerMaterializersImpl {
       }
       GenPickler
     """
+
+    c.Expr[Pickler[T]](result)
   }
 
-  def materializeUnpickler[T: c.WeakTypeTag](c: BlackboxContext): c.Tree = {
+  def materializeUnpickler[T: c.WeakTypeTag](c: Context): c.Expr[Unpickler[T]] = {
     import c.universe._
 
     val tpe = weakTypeOf[T]
@@ -55,7 +57,7 @@ object PicklerMaterializersImpl {
     if (!sym.isCaseClass) {
       c.error(c.enclosingPosition,
           "Cannot materialize pickler for non-case class")
-      return q"null"
+      return c.Expr[Unpickler[T]](q"null")
     }
 
     val accessors = (tpe.declarations collect {
@@ -77,7 +79,7 @@ object PicklerMaterializersImpl {
       new $tpe(..$unpickledFields)
     """
 
-    q"""
+    val result = q"""
       implicit object GenUnpickler extends org.scalajs.spickling.Unpickler[$tpe] {
         import org.scalajs.spickling._
         override def unpickle(json: scala.scalajs.js.Any)(
@@ -85,9 +87,12 @@ object PicklerMaterializersImpl {
       }
       GenUnpickler
     """
+
+    c.Expr[Unpickler[T]](result)
   }
 
-  def materializeCaseObjectName[T: c.WeakTypeTag](c: BlackboxContext): c.Tree = {
+  def materializeCaseObjectName[T: c.WeakTypeTag](
+      c: Context): c.Expr[PicklerRegistry.SingletonFullName[T]] = {
     import c.universe._
 
     val tpe = weakTypeOf[T]
@@ -98,9 +103,11 @@ object PicklerMaterializersImpl {
           s"Cannot generate a case object name for non-case object $sym")
 
     val name = sym.fullName+"$"
-    q"""
+    val result = q"""
       new org.scalajs.spickling.PicklerRegistry.SingletonFullName($name)
     """
+
+    c.Expr[PicklerRegistry.SingletonFullName[T]](result)
   }
 }
 
