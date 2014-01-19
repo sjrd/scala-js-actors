@@ -13,12 +13,15 @@ val commonSettings = Seq(
 )
 
 lazy val root = project.in(file(".")).settings(commonSettings: _*)
-  .aggregate(spickling, actors)
+  .aggregate(spickling, actors, akkaWebsocketBridge)
 
 lazy val spickling = project.settings(commonSettings: _*)
 
 lazy val actors = project.settings(commonSettings: _*)
   .dependsOn(spickling)
+
+lazy val akkaWebsocketBridge = project.in(file("akka-websocket-bridge"))
+  .settings(commonSettings: _*)
 
 lazy val examples = project.settings(commonSettings: _*)
   .aggregate(webworkersExample)
@@ -28,5 +31,14 @@ lazy val webworkersExample = project.in(file("examples/webworkers"))
   .dependsOn(actors)
 
 lazy val faultToleranceExample = project.in(file("examples/faulttolerance"))
+  .settings(commonSettings: _*)
+  .dependsOn(actors)
+
+lazy val chatExample = project.in(file("examples/chat-full-stack"))
+  .settings(commonSettings: _*)
+  .dependsOn(akkaWebsocketBridge)
+  .aggregate(chatExampleScalaJS)
+
+lazy val chatExampleScalaJS = project.in(file("examples/chat-full-stack/scalajs"))
   .settings(commonSettings: _*)
   .dependsOn(actors)
