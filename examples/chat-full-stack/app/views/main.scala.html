@@ -4,6 +4,7 @@
 
 <html>
     <head>
+        <meta charset="utf-8">
         <title>@title</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/ui-lightness/jquery-ui-1.10.4.custom.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
@@ -19,6 +20,8 @@
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/chatbox.css")">
     </head>
     <body>
-        @content
+        <div class="container">
+            @content
+        </div>
     </body>
 </html>

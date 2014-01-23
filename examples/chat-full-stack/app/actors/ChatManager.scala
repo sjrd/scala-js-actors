@@ -36,6 +36,7 @@ class UserManager extends Actor with ActorLogging {
   def receive = LoggingReceive {
     case m @ NewConnection() =>
       sender ! ActorWebSocket.actorForWebSocketHandler(self)
+      context.children.foreach(context.watch(_))
 
     case Join(user) =>
       peer = sender
@@ -49,7 +50,7 @@ class UserManager extends Actor with ActorLogging {
       log.info(s"user $user receives $m, peer is $peer")
       peer ! m
 
-    case m =>
-      log.info(s"hey look! I receive this unhandled message: $m")
+    case Terminated(proxy) =>
+      context.stop(self)
   }
 }

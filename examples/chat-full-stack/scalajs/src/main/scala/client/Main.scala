@@ -5,6 +5,7 @@ import akka.scalajs.wsclient._
 
 import models._
 
+import scala.scalajs.js
 import org.scalajs.jquery.{jQuery => jQ, _}
 
 object Main {
@@ -84,8 +85,18 @@ class Manager extends Actor {
   }
 
   def addMessage(message: Message) = {
-    jQ("#messages").append(jQ("<li>").text(
-        s"${message.user.nick}: ${message.text}"))
+    val timeStampStr = new js.Date(message.timestamp).toString()
+    jQ(".msg-wrap").append(
+      jQ("""<div class="media msg">""").append(
+        jQ("""<div class="media-body">""").append(
+          jQ(s"""<small class="pull-right time"><i class="fa fa-clock-o"></i> $timeStampStr</small>"""),
+          jQ("""<h5 class="media-heading">""").text(message.user.nick),
+          jQ("""<small class="col-lg-10">""").text(message.text)
+        )
+      )
+    )
+    // scroll to new message
+    jQ(".msg-wrap").scrollTop(jQ(".msg-wrap")(0).scrollHeight)
   }
 }
 
