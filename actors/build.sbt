@@ -4,7 +4,7 @@ scalaJSSettings
 
 name := "Scala.js actors"
 
-libraryDependencies += "org.scalajs" %%% "scalajs-pickling" % "0.3-SNAPSHOT"
+libraryDependencies += "org.scalajs" %%% "scalajs-pickling" % "0.3.1"
 
 libraryDependencies += "org.scala-lang.modules.scalajs" %% "scalajs-test-bridge" % scalaJSVersion % "test"
 

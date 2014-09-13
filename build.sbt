@@ -3,7 +3,8 @@ import ScalaJSKeys._
 val commonSettings = Seq(
     organization := "org.scalajs",
     version := "0.1-SNAPSHOT",
-    scalaVersion := "2.10.3",
+    scalaVersion := "2.11.2",
+    crossScalaVersions := Seq("2.11.2", "2.10.4"),
     normalizedName ~= { _.replace("scala-js", "scalajs") },
     scalacOptions ++= Seq(
         "-deprecation",
@@ -42,6 +43,7 @@ lazy val faultToleranceExample = project.in(file("examples/faulttolerance"))
   .dependsOn(actors)
 
 lazy val chatExample = project.in(file("examples/chat-full-stack"))
+  .enablePlugins(PlayScala)
   .settings(commonSettings: _*)
   .dependsOn(akkaWebsocketBridge)
   .settings(
