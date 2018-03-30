@@ -1,4 +1,6 @@
-# Actor system for Scala.js
+# Actor system for Scala.js -- obsolete
+
+**This project is obsolete. It has been superseded by [Akka.js](https://github.com/akka-js/akka.js).**
 
 This project aims at providing an actor system for Scala.js, featuring:
 
